@@ -1,0 +1,2 @@
+- [Safety integration boundaries](safety-integration-boundaries.md) — never imply emergency dispatch, automatic messaging, verified providers, or background tracking without a configured provider.
+- [OpenAPI client DOM types](openapi-client-dom-types.md) — generated fetch clients need `dom.iterable` in their TypeScript lib for Headers.entries().

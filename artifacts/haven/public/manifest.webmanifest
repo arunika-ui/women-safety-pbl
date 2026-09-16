@@ -1,0 +1,18 @@
+{
+  "name": "Haven — a softer place to land",
+  "short_name": "Haven",
+  "description": "A discreet, private space for safety check-ins, journaling, trusted contacts, and emotional support.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#f8f4ed",
+  "theme_color": "#1f4037",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "180x180",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

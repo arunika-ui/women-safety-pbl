@@ -1,6 +1,6 @@
-# [Project name]
+# Haven
 
-_Replace the heading above with the project's name, and this line with one sentence describing what this app does for users._
+Haven is a discreet safety and wellbeing companion for private check-ins, journaling, trusted contacts, journeys, and emotional support.
 
 ## Run & Operate
 
@@ -22,15 +22,22 @@ _Replace the heading above with the project's name, and this line with one sente
 
 ## Where things live
 
-_Populate as you build — short repo map plus pointers to the source-of-truth file for DB schema, API contracts, theme files, etc._
+- `artifacts/haven/src/App.tsx` — responsive app shell, routes, feature UI, and client-side interaction states
+- `artifacts/haven/src/index.css` — Haven visual tokens and global theme
+- `artifacts/api-server/src/routes/haven.ts` — typed Haven API surface and safe demo service layer
+- `lib/api-spec/openapi.yaml` — source of truth for generated API hooks and Zod contracts
+- `artifacts/haven/public/manifest.webmanifest` and `sw.js` — installable PWA shell
 
 ## Architecture decisions
 
-_Populate as you build — non-obvious choices a reader couldn't infer from the code (3-5 bullets)._
+- Safety-critical capabilities are explicit: the current build does not claim automatic SMS, background tracking, emergency dispatch, or verified provider data.
+- The first build uses a small in-memory demo service behind typed endpoints so the UI is functional while authentication, durable private storage, and provider integrations are configured.
+- Browser geolocation is opt-in and scoped to the emergency screen; continuous sharing reports unavailable until a permitted provider is connected.
+- The frontend is mobile-first and uses a deep botanical teal, oat, saffron, and clay palette to stay calm without becoming colorless.
 
 ## Product
 
-_Describe the high-level user-facing capabilities of this app once they exist._
+Haven includes a calm dashboard, mood check-ins, Trusted Circle contact management, Journey Mode, location-permission messaging, a press-and-hold-inspired emergency screen, private journal CRUD, Haven Companion safety escalation copy, support resources with demo markers, timed check-ins, privacy mode, onboarding screens, and a PWA install shell.
 
 ## User preferences
 
@@ -38,7 +45,9 @@ _Populate as you build — explicit user instructions worth remembering across s
 
 ## Gotchas
 
-_Populate as you build — sharp edges, "always run X before Y" rules._
+- If the API contract changes, run `pnpm --filter @workspace/api-spec run codegen` before checking artifacts.
+- Use the exact managed workflows for previewing the API and Haven web app; the app expects workflow-provided `PORT` and `BASE_PATH`.
+- Replace the demo service with authenticated durable storage before treating Haven as production-ready for sensitive user data.
 
 ## Pointers
 

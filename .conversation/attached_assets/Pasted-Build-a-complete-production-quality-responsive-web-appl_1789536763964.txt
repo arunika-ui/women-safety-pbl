@@ -1,0 +1,777 @@
+Build a complete production-quality responsive web application called "Haven".
+
+Haven is a discreet women's safety, wellbeing, mental-health and emergency-support platform. It should feel like a premium modern wellness/lifestyle application rather than an obvious emergency app.
+
+TECH STACK
+- React
+- TypeScript
+- Vite
+- Tailwind CSS
+- Supabase for authentication/database/storage/realtime
+- GSAP for subtle animations
+- Lucide React icons
+- React Router
+- PWA support so it can be installed on a phone
+
+The application must be mobile-first but look excellent on desktop and tablet.
+
+==================================================
+DESIGN DIRECTION
+==================================================
+
+The UI must be extremely clean, minimalist and natural.
+
+Avoid:
+- stereotypical bright pink women's safety design
+- huge gradients everywhere
+- excessive animations
+- clutter
+- childish illustrations
+- giant SOS buttons dominating every screen
+
+Use:
+- warm neutral background
+- off-white / cream surfaces
+- charcoal text
+- muted sage / dusty rose accents
+- rounded cards
+- subtle shadows
+- generous spacing
+- excellent typography
+- large touch targets
+- bottom navigation on mobile
+- sidebar/navigation on desktop
+
+Animations should use GSAP but remain subtle:
+- page entrance animations
+- staggered card reveals
+- smooth navigation transitions
+- SOS interaction animation
+- modal transitions
+- expanding/collapsing cards
+- subtle number/count animations
+
+Respect prefers-reduced-motion.
+
+The app should feel trustworthy, private, calm and premium.
+
+==================================================
+AUTHENTICATION
+==================================================
+
+Create proper Supabase authentication.
+
+Pages:
+- Welcome
+- Sign up
+- Login
+- Forgot password
+- Onboarding
+
+During onboarding ask for:
+- first name
+- optional profile photo
+- emergency contacts
+- trusted contacts
+- optional home city
+- safety preferences
+
+Never require unnecessary sensitive information.
+
+Users must only access their own private information.
+
+Implement Supabase Row Level Security policies.
+
+==================================================
+MAIN APP NAVIGATION
+==================================================
+
+Mobile bottom navigation:
+
+Home
+Safety
+Journal
+Support
+Profile
+
+Desktop:
+use a clean left sidebar.
+
+Every major section should be reachable without returning to the homepage.
+
+Include a discreet persistent emergency shortcut.
+
+==================================================
+HOME DASHBOARD
+==================================================
+
+Create a calm personalized dashboard.
+
+Example:
+
+Good evening, Arunika
+
+How are you feeling today?
+
+[ Safe ] [ Uneasy ] [ Need Help ]
+
+Then cards:
+
+Safety Check
+"Everything okay?"
+[I'm Safe]
+
+Journey
+"Share your journey with someone you trust."
+
+Journal
+"Take a minute for yourself."
+
+Support
+"Talk about what's on your mind."
+
+Trusted Circle
+"3 people have your back."
+
+Show recent journal/check-in activity without exposing sensitive content unnecessarily.
+
+==================================================
+EMERGENCY / SOS SYSTEM
+==================================================
+
+Create a serious emergency system.
+
+The SOS button should require press-and-hold for approximately 2 seconds to reduce accidental activation.
+
+After activation:
+
+1. Obtain current browser geolocation WITH explicit permission.
+2. Create an emergency event in Supabase.
+3. Display current coordinates and map link.
+4. Show trusted contacts.
+5. Provide quick call actions.
+6. Provide quick message actions.
+7. Start an emergency screen.
+8. Allow the user to cancel false activation.
+9. Store emergency event history.
+10. Allow periodic location updates while the emergency session is active and the app/browser permits it.
+
+IMPORTANT:
+Do NOT pretend the web app can silently track someone in the background when the browser/OS does not allow it.
+
+Clearly show whether location sharing is:
+ACTIVE
+PAUSED
+UNAVAILABLE
+
+Never collect location without explicit consent.
+
+==================================================
+TRUSTED CIRCLE
+==================================================
+
+Users can create a Trusted Circle.
+
+Allow:
+
+Add trusted contact
+Name
+Relationship
+Phone
+Email optional
+
+Actions:
+
+Call
+Message
+Share location
+Start journey
+Emergency contact
+
+Allow users to select which contacts should be notified during an emergency.
+
+Create Trusted Circle management UI.
+
+==================================================
+JOURNEY MODE
+==================================================
+
+Create "Journey Mode".
+
+User enters:
+
+Destination
+Expected arrival time
+Trusted contact(s)
+
+Then:
+
+START JOURNEY
+
+During journey mode show:
+
+Journey active
+Started at 8:20 PM
+Expected arrival 8:50 PM
+Location sharing status
+Time remaining
+
+Buttons:
+
+I Arrived Safely
+Extend Time
+Contact Trusted Person
+Emergency
+
+If expected arrival time passes without confirmation, show an overdue state and prompt the user to check in.
+
+Do not claim automatic SMS/contact notification unless an actual messaging provider has been configured.
+
+Design the backend so Twilio or another provider could be added later.
+
+==================================================
+LOCATION SHARING
+==================================================
+
+Create a dedicated location-sharing interface.
+
+Use browser Geolocation API.
+
+Allow:
+
+Share once
+Share during journey
+Share during emergency
+Stop sharing
+
+Show permission state clearly.
+
+Create a map-link generator using latitude/longitude.
+
+Never enable continuous tracking secretly.
+
+==================================================
+QUICK EXIT / PRIVACY
+==================================================
+
+Create a discreet Quick Exit button.
+
+When pressed:
+
+Immediately navigate to a configurable neutral page.
+
+Also create:
+
+Privacy Mode
+
+When enabled, sensitive dashboard previews are hidden.
+
+Journal entries should never appear openly on the homepage in Privacy Mode.
+
+Add optional app lock architecture for future implementation.
+
+==================================================
+JOURNAL
+==================================================
+
+Create a beautiful private journaling system.
+
+Journal home:
+
+"What's on your mind?"
+
+New Entry
+
+Users can:
+
+write entries
+edit entries
+delete entries
+search entries
+favorite entries
+add mood
+add tags
+
+Mood options:
+
+Calm
+Happy
+Anxious
+Sad
+Angry
+Overwhelmed
+Numb
+
+Include optional prompts:
+
+"What happened today?"
+"What made you feel safe?"
+"What made you uncomfortable?"
+"What do you need right now?"
+"What would you tell a friend in your situation?"
+
+Show mood trends WITHOUT diagnosing the user.
+
+Create journal calendar view.
+
+Journal data must be private to the user.
+
+==================================================
+AI SUPPORT CHAT
+==================================================
+
+Create a conversational support assistant.
+
+IMPORTANT:
+Do NOT present it as a licensed therapist.
+
+Name it something such as:
+
+Haven Companion
+
+Description:
+
+"A private AI space for reflection and emotional support. It isn't a replacement for professional mental-health care."
+
+Interface should resemble a clean modern messaging app.
+
+Provide conversation starters:
+
+"I need to talk."
+"I'm feeling anxious."
+"Help me think through something."
+"I don't feel safe."
+"I had a difficult day."
+
+Create API abstraction:
+
+/api/chat
+
+Keep provider configuration separate so an LLM API can later be connected securely server-side.
+
+NEVER expose API keys in frontend code.
+
+The AI support system should have safety escalation logic.
+
+If the user indicates immediate physical danger:
+prioritize emergency resources and trusted contacts.
+
+If the user expresses self-harm intent:
+show appropriate crisis-support guidance and encourage contacting emergency/professional support.
+
+Do not allow the AI to diagnose mental illnesses.
+
+==================================================
+PROFESSIONAL SUPPORT / THERAPY
+==================================================
+
+Create Support page.
+
+Sections:
+
+AI Companion
+Professional Help
+Emergency Help
+Legal Resources
+Safety Resources
+
+Professional support directory cards should support:
+
+Therapist name
+Specialization
+Language
+Online/In-person
+Contact
+Website
+Verified indicator
+
+Do not invent real therapists.
+
+Use clearly marked sample/demo data until a verified provider database is connected.
+
+==================================================
+EMERGENCY CONTACTS
+==================================================
+
+Create an Emergency Resources page.
+
+Structure resources by:
+
+Police
+Medical Emergency
+Women's Helplines
+Domestic Violence Support
+Mental Health Crisis
+Legal Assistance
+Cybercrime
+
+Do NOT hardcode potentially outdated emergency numbers as guaranteed-current.
+
+Store resources in a database table with:
+country
+region
+category
+name
+phone
+website
+verified_at
+source
+
+UI should show:
+"Last verified: DATE"
+
+==================================================
+INCIDENT RECORD
+==================================================
+
+Create optional private incident documentation.
+
+Allow user to record:
+
+Date
+Time
+Location optional
+Description
+People involved
+Witnesses
+Notes
+Photos/documents
+
+Call this:
+
+Incident Record
+
+Clearly explain:
+
+"This is a personal record and is not automatically a police report or legal filing."
+
+Store attachments securely using Supabase Storage.
+
+==================================================
+SAFETY CHECK-IN
+==================================================
+
+Allow users to create timed check-ins.
+
+Example:
+
+"Check on me in"
+
+15 minutes
+30 minutes
+1 hour
+Custom
+
+When timer ends, ask:
+
+"Are you safe?"
+
+Actions:
+
+I'm Safe
+Need More Time
+Get Help
+
+Store check-in status.
+
+==================================================
+SAFETY PLANNING
+==================================================
+
+Create a Safety Plan feature.
+
+Sections:
+
+People I trust
+Places I feel safe
+Emergency contacts
+Important documents
+Transportation options
+Things I should take
+Personal notes
+
+Allow users to create and edit their own safety plan.
+
+==================================================
+DIGITAL SAFETY
+==================================================
+
+Create educational Digital Safety section.
+
+Cards:
+
+Account security
+Location privacy
+Social media privacy
+Device safety
+Suspicious links
+Online harassment
+Evidence preservation
+
+Keep this informational and practical.
+
+==================================================
+PROFILE & SETTINGS
+==================================================
+
+Create:
+
+Profile
+Trusted Circle
+Emergency Preferences
+Privacy
+Location Permissions
+Notification Preferences
+Appearance
+Data & Privacy
+Logout
+
+Include:
+
+Export my data
+Delete my account
+
+==================================================
+DATABASE
+==================================================
+
+Design proper Supabase schema.
+
+Suggested tables:
+
+profiles
+trusted_contacts
+journal_entries
+journal_tags
+journeys
+journey_locations
+safety_checkins
+emergency_events
+emergency_locations
+incident_records
+incident_attachments
+safety_plans
+chat_conversations
+chat_messages
+resource_directory
+user_preferences
+
+Use UUID primary keys.
+
+Include:
+created_at
+updated_at
+
+where appropriate.
+
+Create indexes where useful.
+
+Implement Row Level Security.
+
+Users must never be able to read another user's:
+journal
+location
+journeys
+incidents
+contacts
+chat history
+safety plans
+
+==================================================
+UX REQUIREMENTS
+==================================================
+
+Every action must have:
+
+loading state
+success state
+error state
+empty state
+
+Forms must have validation.
+
+Use skeleton loaders.
+
+Use toast notifications.
+
+Provide confirmation dialogs before destructive actions.
+
+Make everything keyboard accessible.
+
+Use ARIA labels.
+
+Maintain WCAG-friendly contrast.
+
+Buttons should have large mobile touch areas.
+
+Make forms comfortable on phone keyboards.
+
+==================================================
+RESPONSIVE WEBAPP
+==================================================
+
+Optimize primarily for:
+
+iPhone
+Android phones
+tablet
+desktop
+
+Mobile should feel like a native application.
+
+Use:
+
+safe-area padding
+sticky bottom navigation
+PWA manifest
+installable icons
+standalone display mode
+responsive layouts
+
+==================================================
+GSAP
+==================================================
+
+Create reusable GSAP animation utilities.
+
+Use animations only where they improve UX.
+
+Examples:
+
+dashboard cards stagger in
+page content fade/slide
+SOS hold progress animation
+modal entrance
+journey status transition
+success confirmation animation
+
+Do not make basic navigation slow.
+
+==================================================
+CODE QUALITY
+==================================================
+
+Use reusable components.
+
+Suggested structure:
+
+src/
+ components/
+ layouts/
+ pages/
+ features/
+ hooks/
+ services/
+ lib/
+ types/
+ utils/
+
+Features:
+
+auth/
+safety/
+journal/
+journey/
+support/
+contacts/
+incidents/
+profile/
+
+Create:
+
+ProtectedRoute
+AppLayout
+MobileNavigation
+DesktopSidebar
+EmergencyShortcut
+PageHeader
+EmptyState
+LoadingState
+ErrorState
+ConfirmDialog
+
+Avoid giant components.
+
+Use strict TypeScript.
+
+No unnecessary any types.
+
+Handle Supabase errors properly.
+
+==================================================
+IMPORTANT SECURITY RULES
+==================================================
+
+This application handles extremely sensitive information.
+
+Therefore:
+
+Never expose service-role keys to frontend.
+
+Never store passwords manually.
+
+Use Supabase Auth.
+
+Use Row Level Security.
+
+Request geolocation only when necessary.
+
+Never activate tracking without user permission.
+
+Allow location sharing to be stopped immediately.
+
+Do not claim SMS/calling/background tracking capabilities unless they actually exist.
+
+Sanitize user-generated content.
+
+Validate file uploads.
+
+Restrict attachment file types and sizes.
+
+Do not log journal/chat/location contents unnecessarily.
+
+==================================================
+FIRST IMPLEMENTATION
+==================================================
+
+First inspect the existing repository.
+
+Do NOT blindly replace working code.
+
+1. Understand existing architecture.
+2. Identify reusable code.
+3. Fix existing build/type errors.
+4. Create/update dependencies.
+5. Build the design system.
+6. Implement navigation/layout.
+7. Implement authentication.
+8. Implement dashboard.
+9. Implement Trusted Circle.
+10. Implement journal.
+11. Implement Journey Mode.
+12. Implement location sharing.
+13. Implement emergency flow.
+14. Implement check-ins.
+15. Implement incident records.
+16. Implement support/AI interface.
+17. Implement settings/privacy.
+18. Configure PWA.
+19. Audit responsiveness.
+20. Audit accessibility.
+21. Audit security.
+22. Run TypeScript/build checks.
+
+Do not leave buttons that visually work but have no behavior.
+
+If a feature requires an external provider that has not been configured, create the full UI/backend abstraction and clearly mark the integration as unavailable instead of faking success.
+
+At the end:
+- run npm build
+- fix all TypeScript errors
+- check console errors
+- check every route
+- test mobile navigation
+- test authentication protection
+- test RLS assumptions
+- report what is fully functional
+- report what still requires external API credentials/configuration

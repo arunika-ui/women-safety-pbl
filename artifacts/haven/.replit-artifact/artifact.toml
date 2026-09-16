@@ -1,0 +1,28 @@
+kind = "web"
+previewPath = "/"
+title = "Haven"
+description = "A discreet, calm safety and wellbeing companion for private check-ins, journaling, trusted contacts, journey mode, and support resources."
+version = "1.0.0"
+id = "artifacts/haven"
+router = "path"
+
+[[services]]
+name = "web"
+paths = [ "/" ]
+localPort = 24062
+
+[services.development]
+run = "pnpm --filter @workspace/haven run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/haven", "run", "build" ]
+serve = "static"
+publicDir = "artifacts/haven/dist/public"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "24062"
+BASE_PATH = "/"

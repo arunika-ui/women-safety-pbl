@@ -10,6 +10,8 @@ servers:
 tags:
   - name: health
     description: Health operations
+  - name: haven
+    description: Haven safety and wellbeing operations
 paths:
   /healthz:
     get:
@@ -24,7 +26,228 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/HealthStatus"
+  /haven/dashboard:
+    get:
+      operationId: getHavenDashboard
+      tags: [haven]
+      summary: Get Haven dashboard summary
+      responses:
+        "200":
+          description: Dashboard summary
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DashboardSummary"
+  /haven/journal:
+    get:
+      operationId: listJournalEntries
+      tags: [haven]
+      summary: List private journal entries
+      responses:
+        "200":
+          description: Journal entries
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/JournalEntry"
+    post:
+      operationId: createJournalEntry
+      tags: [haven]
+      summary: Create a journal entry
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/JournalEntryInput"
+      responses:
+        "201":
+          description: Created journal entry
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/JournalEntry"
+  /haven/journal/{id}:
+    patch:
+      operationId: updateJournalEntry
+      tags: [haven]
+      summary: Update a journal entry
+      parameters:
+        - $ref: "#/components/parameters/Id"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/JournalEntryUpdate"
+      responses:
+        "200":
+          description: Updated journal entry
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/JournalEntry"
+    delete:
+      operationId: deleteJournalEntry
+      tags: [haven]
+      summary: Delete a journal entry
+      parameters:
+        - $ref: "#/components/parameters/Id"
+      responses:
+        "204":
+          description: Deleted
+  /haven/contacts:
+    get:
+      operationId: listTrustedContacts
+      tags: [haven]
+      summary: List trusted contacts
+      responses:
+        "200":
+          description: Trusted contacts
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/TrustedContact"
+    post:
+      operationId: createTrustedContact
+      tags: [haven]
+      summary: Add a trusted contact
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TrustedContactInput"
+      responses:
+        "201":
+          description: Created trusted contact
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TrustedContact"
+  /haven/contacts/{id}:
+    delete:
+      operationId: deleteTrustedContact
+      tags: [haven]
+      summary: Remove a trusted contact
+      parameters:
+        - $ref: "#/components/parameters/Id"
+      responses:
+        "204":
+          description: Deleted
+  /haven/journeys:
+    get:
+      operationId: listJourneys
+      tags: [haven]
+      summary: List recent journeys
+      responses:
+        "200":
+          description: Journeys
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Journey"
+    post:
+      operationId: createJourney
+      tags: [haven]
+      summary: Start a journey
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/JourneyInput"
+      responses:
+        "201":
+          description: Created journey
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Journey"
+  /haven/journeys/{id}/status:
+    patch:
+      operationId: updateJourneyStatus
+      tags: [haven]
+      summary: Update a journey status
+      parameters:
+        - $ref: "#/components/parameters/Id"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/JourneyStatusInput"
+      responses:
+        "200":
+          description: Updated journey
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Journey"
+  /haven/resources:
+    get:
+      operationId: listSupportResources
+      tags: [haven]
+      summary: List support resources
+      responses:
+        "200":
+          description: Support resources
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/SupportResource"
+  /haven/checkins:
+    post:
+      operationId: createSafetyCheckin
+      tags: [haven]
+      summary: Create a timed safety check-in
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SafetyCheckinInput"
+      responses:
+        "201":
+          description: Created safety check-in
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SafetyCheckin"
+  /haven/chat:
+    post:
+      operationId: sendCompanionMessage
+      tags: [haven]
+      summary: Send a message to Haven Companion
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ChatMessageInput"
+      responses:
+        "200":
+          description: Companion response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ChatMessage"
 components:
+  parameters:
+    Id:
+      name: id
+      in: path
+      required: true
+      schema:
+        type: string
   schemas:
     HealthStatus:
       type: object
@@ -33,4 +256,186 @@ components:
           type: string
       required:
         - status
+    DashboardSummary:
+      type: object
+      required: [firstName, trustedContactCount, currentMood, recentActivity, journey]
+      properties:
+        firstName:
+          type: string
+        trustedContactCount:
+          type: integer
+        currentMood:
+          type: string
+          enum: [safe, uneasy, need_help, null]
+        recentActivity:
+          type: array
+          items:
+            $ref: "#/components/schemas/ActivityItem"
+        journey:
+          oneOf:
+            - $ref: "#/components/schemas/Journey"
+            - type: "null"
+    ActivityItem:
+      type: object
+      required: [id, type, title, detail, createdAt]
+      properties:
+        id:
+          type: string
+        type:
+          type: string
+          enum: [journal, checkin, journey, support]
+        title:
+          type: string
+        detail:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+    JournalEntry:
+      type: object
+      required: [id, title, content, mood, tags, isFavorite, createdAt, updatedAt]
+      properties:
+        id:
+          type: string
+        title:
+          type: string
+        content:
+          type: string
+        mood:
+          type: string
+          enum: [calm, happy, anxious, sad, angry, overwhelmed, numb]
+        tags:
+          type: array
+          items:
+            type: string
+        isFavorite:
+          type: boolean
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+    JournalEntryInput:
+      type: object
+      required: [title, content, mood]
+      properties:
+        title: { type: string, minLength: 1 }
+        content: { type: string, minLength: 1 }
+        mood:
+          type: string
+          enum: [calm, happy, anxious, sad, angry, overwhelmed, numb]
+        tags:
+          type: array
+          items: { type: string }
+    JournalEntryUpdate:
+      type: object
+      properties:
+        title: { type: string, minLength: 1 }
+        content: { type: string, minLength: 1 }
+        mood:
+          type: string
+          enum: [calm, happy, anxious, sad, angry, overwhelmed, numb]
+        tags:
+          type: array
+          items: { type: string }
+        isFavorite: { type: boolean }
+    TrustedContact:
+      type: object
+      required: [id, name, relationship, phone, isEmergencyContact]
+      properties:
+        id: { type: string }
+        name: { type: string }
+        relationship: { type: string }
+        phone: { type: string }
+        email: { type: ["string", "null"], format: email }
+        isEmergencyContact: { type: boolean }
+    TrustedContactInput:
+      type: object
+      required: [name, relationship, phone]
+      properties:
+        name: { type: string, minLength: 1 }
+        relationship: { type: string, minLength: 1 }
+        phone: { type: string, minLength: 5 }
+        email: { type: ["string", "null"], format: email }
+        isEmergencyContact: { type: boolean }
+    Journey:
+      type: object
+      required: [id, destination, expectedArrival, startedAt, status, sharingStatus, contactIds]
+      properties:
+        id: { type: string }
+        destination: { type: string }
+        expectedArrival: { type: string, format: date-time }
+        startedAt: { type: string, format: date-time }
+        status:
+          type: string
+          enum: [active, arrived, overdue, cancelled]
+        sharingStatus:
+          type: string
+          enum: [active, paused, unavailable]
+        contactIds:
+          type: array
+          items: { type: string }
+    JourneyInput:
+      type: object
+      required: [destination, expectedArrival, contactIds]
+      properties:
+        destination: { type: string, minLength: 1 }
+        expectedArrival: { type: string, format: date-time }
+        contactIds:
+          type: array
+          items: { type: string }
+    JourneyStatusInput:
+      type: object
+      required: [status]
+      properties:
+        status:
+          type: string
+          enum: [active, arrived, overdue, cancelled]
+    SupportResource:
+      type: object
+      required: [id, category, name, description, verifiedAt]
+      properties:
+        id: { type: string }
+        category:
+          type: string
+          enum: [emergency, professional, legal, safety]
+        name: { type: string }
+        description: { type: string }
+        phone: { type: ["string", "null"] }
+        website: { type: ["string", "null"], format: uri }
+        verifiedAt: { type: string, format: date }
+        isDemo: { type: boolean }
+    SafetyCheckin:
+      type: object
+      required: [id, dueAt, status]
+      properties:
+        id: { type: string }
+        dueAt: { type: string, format: date-time }
+        status:
+          type: string
+          enum: [pending, safe, need_more_time, get_help]
+    SafetyCheckinInput:
+      type: object
+      required: [durationMinutes]
+      properties:
+        durationMinutes: { type: integer, minimum: 1 }
+    ChatMessage:
+      type: object
+      required: [id, role, content, createdAt, safetyLevel]
+      properties:
+        id: { type: string }
+        role:
+          type: string
+          enum: [user, companion, system]
+        content: { type: string }
+        createdAt: { type: string, format: date-time }
+        safetyLevel:
+          type: string
+          enum: [normal, prioritize_help, crisis]
+    ChatMessageInput:
+      type: object
+      required: [content]
+      properties:
+        content: { type: string, minLength: 1 }
 
